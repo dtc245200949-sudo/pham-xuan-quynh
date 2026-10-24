@@ -44,7 +44,7 @@ services:
       - app-net
 
   nginx:
-    image: nginx:alpine
+    build: ./nginx
     container_name: movie_nginx
     ports:
       - "8280:80"
