@@ -1,0 +1,131 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: movie_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: movie_db
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./app/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-prootpassword"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    networks:
+      - app-net
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: movie_phpmyadmin
+    environment:
+      PMA_HOST: mysql
+      MYSQL_ROOT_PASSWORD: rootpassword
+    ports:
+      - "8080:80"
+    networks:
+      - app-net
+
+  webapp:
+    build: ./app
+    container_name: movie_webapp
+    environment:
+      DB_HOST: mysql
+      DB_USER: root
+      DB_PASS: rootpassword
+      DB_NAME: movie_db
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - app-net
+
+  nginx:
+    image: nginx:alpine
+    container_name: movie_nginx
+    ports:
+      - "8280:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/ssl:/etc/nginx/ssl
+    depends_on:
+      - webapp
+    networks:
+      - app-net
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: movie_prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    networks:
+      - app-net
+
+  mysqld-exporter:
+    image: prom/mysqld-exporter:v0.16.0
+    container_name: movie_mysqld_exporter
+    command:
+      - --mysqld.address=mysql:3306
+      - --mysqld.username=movie_monitor
+    environment:
+      MYSQLD_EXPORTER_PASSWORD: monitorpassword
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - app-net
+
+  loki:
+    image: grafana/loki:latest
+    container_name: movie_loki
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/loki-config.yaml
+    volumes:
+      - ./loki/loki-config.yaml:/etc/loki/loki-config.yaml
+    networks:
+      - app-net
+
+  promtail:
+    image: grafana/promtail:latest
+    container_name: movie_promtail
+    command: -config.file=/etc/promtail/promtail-config.yaml
+    volumes:
+      - ./promtail/promtail-config.yaml:/etc/promtail/promtail-config.yaml
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+    networks:
+      - app-net
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: movie_grafana
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-MovieTicket@2026}
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
+    depends_on:
+      - loki
+      - prometheus
+    networks:
+      - app-net
+
+volumes:
+  grafana_data:
+  prometheus_data:
+
+networks:
+  app-net:
+    driver: bridge

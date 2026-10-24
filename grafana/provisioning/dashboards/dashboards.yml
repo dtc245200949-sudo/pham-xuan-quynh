@@ -1,0 +1,11 @@
+apiVersion: 1
+
+providers:
+  - name: Movie Ticket System
+    orgId: 1
+    folder: Movie Ticket System
+    type: file
+    disableDeletion: true
+    editable: false
+    options:
+      path: /var/lib/grafana/dashboards
