@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đặt vé | MovieTicket</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header>
+      <div class="navbar">
+        <a class="brand" href="/" aria-label="MovieTicket - Trang chủ">🎬 MovieTicket</a>
+        <nav class="nav-links">
+          <a href="/">Trang chủ</a>
+          <a href="/movies">Phim</a>
+          <a href="/booking" aria-current="page">Đặt vé</a>
+          <a href="/admin">Admin</a>
+          <a href="/login">Đăng nhập</a>
+          <a href="/register">Đăng ký</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container page-content">
+      <section class="section" id="booking">
+        <div class="page-heading">
+          <div>
+            <p class="eyebrow">MOVIETICKET / ĐẶT CHỖ</p>
+            <h1>Đặt vé xem phim</h1>
+          </div>
+        </div>
+        <div id="user-status" class="booking-result" style="margin-bottom: 16px;">Bạn chưa đăng nhập.</div>
+
+        <form id="booking-form">
+          <div class="form-grid">
+            <div>
+              <label for="movie">Phim</label>
+              <select id="movie" name="movie"></select>
+            </div>
+            <div>
+              <label for="cinema">Rạp</label>
+              <select id="cinema" name="cinema"></select>
+            </div>
+            <div>
+              <label for="time">Suất chiếu</label>
+              <select id="time" name="time"></select>
+            </div>
+            <div>
+              <label for="customer-name">Tên khách hàng</label>
+              <input id="customer-name" name="customer-name" type="text" value="Khách hàng" />
+            </div>
+            <div>
+              <label for="seats">Số ghế</label>
+              <input id="seats" name="seats" type="number" min="1" max="10" value="2" />
+            </div>
+          </div>
+
+          <div class="seat-selection">
+            <h2>Chọn ghế</h2>
+            <div id="seat-grid" class="seat-grid"></div>
+          </div>
+
+          <div class="booking-submit">
+            <button type="submit">Xác nhận đặt vé</button>
+          </div>
+        </form>
+
+        <div id="booking-result" class="booking-result">
+          Chưa có thông tin đặt vé.
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="footer-content">
+        <a class="home-link" href="/">MovieTicket · Trang chủ</a>
+        <nav class="system-links" aria-label="Công cụ hệ thống">
+          <span>Công cụ hệ thống</span>
+          <a href="http://localhost:3000" target="_blank" rel="noopener noreferrer">Grafana</a>
+          <a href="http://localhost:8080" target="_blank" rel="noopener noreferrer">phpMyAdmin</a>
+          <a href="http://localhost:9090" target="_blank" rel="noopener noreferrer">Prometheus</a>
+        </nav>
+        <span>© 2026 Movie Ticket System</span>
+      </div>
+    </footer>
+
+    <script src="/app.js"></script>
+  </body>
+</html>

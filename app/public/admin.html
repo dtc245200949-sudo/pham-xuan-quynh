@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin - Movie Ticket System</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <style>
+      .admin-layout {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+      }
+      .card {
+        background: #111827;
+        padding: 20px;
+        border-radius: 14px;
+        border: 1px solid #334155;
+      }
+      ul {
+        list-style: none;
+        padding-left: 0;
+      }
+      li {
+        padding: 8px 0;
+        border-bottom: 1px solid #283548;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="navbar">
+        <div class="brand">🎬 MovieTicket</div>
+        <nav class="nav-links">
+          <a href="/">Trang chủ</a>
+          <a href="/admin">Admin</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="hero">
+        <h1>Trang quản trị</h1>
+        <p>Thêm phim và suất chiếu cho hệ thống.</p>
+      </section>
+
+      <section class="admin-layout">
+        <div class="card">
+          <h2>Thêm phim mới</h2>
+          <form id="movie-form">
+            <label>Tiêu đề
+              <input type="text" id="movie-title" required />
+            </label>
+            <label>Thể loại
+              <input type="text" id="movie-genre" required />
+            </label>
+            <label>Thời lượng
+              <input type="text" id="movie-duration" required />
+            </label>
+            <label>Đánh giá
+              <input type="number" id="movie-rating" step="0.1" min="0" max="10" value="8.5" />
+            </label>
+            <button type="submit">Lưu phim</button>
+          </form>
+        </div>
+
+        <div class="card">
+          <h2>Thêm suất chiếu</h2>
+          <form id="showtime-form">
+            <label>Phim
+              <select id="showtime-movie"></select>
+            </label>
+            <label>Rạp
+              <input type="text" id="cinema-name" required />
+            </label>
+            <label>Giờ chiếu
+              <input type="text" id="showtime-time" required placeholder="18:00" />
+            </label>
+            <label>Giá vé
+              <input type="number" id="showtime-price" required min="0" value="120000" />
+            </label>
+            <button type="submit">Lưu suất chiếu</button>
+          </form>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Danh sách đặt vé</h2>
+        <div class="card">
+          <ul id="booking-list"></ul>
+        </div>
+      </section>
+    </main>
+
+    <script src="/admin.js"></script>
+  </body>
+</html>

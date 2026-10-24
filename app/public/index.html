@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Movie Ticket System</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header>
+      <div class="navbar">
+        <a class="brand" href="/" aria-label="MovieTicket - Trang chủ">🎬 MovieTicket</a>
+        <nav class="nav-links">
+          <a href="/">Trang chủ</a>
+          <a href="/movies">Phim</a>
+          <a href="/booking">Đặt vé</a>
+          <a href="/admin">Admin</a>
+          <a href="/login">Đăng nhập</a>
+          <a href="/register">Đăng ký</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="hero">
+        <h1>Đặt vé xem phim dễ dàng</h1>
+        <p>Chọn phim, suất chiếu, ghế và hoàn tất đặt vé trong vài phút.</p>
+        <div class="hero-actions">
+          <a href="/movies" class="btn">Xem phim đang chiếu</a>
+          <a href="/booking" class="btn btn-secondary">Đặt vé ngay</a>
+        </div>
+      </section>
+
+      <section class="home-links" aria-label="Danh mục">
+        <a href="/movies">
+          <span class="home-links-label">01 / DANH SÁCH</span>
+          <strong>Phim đang chiếu</strong>
+          <span>Xem poster, thể loại và thời lượng phim</span>
+        </a>
+        <a href="/booking">
+          <span class="home-links-label">02 / ĐẶT CHỖ</span>
+          <strong>Đặt vé xem phim</strong>
+          <span>Chọn rạp, suất chiếu và ghế ngồi</span>
+        </a>
+        <a href="/admin">
+          <span class="home-links-label">03 / QUẢN TRỊ</span>
+          <strong>Quản lý hệ thống</strong>
+          <span>Cập nhật phim và suất chiếu</span>
+        </a>
+      </section>
+    </main>
+
+    <footer>
+      <div class="footer-content">
+        <a class="home-link" href="/">MovieTicket · Trang chủ</a>
+        <nav class="system-links" aria-label="Công cụ hệ thống">
+          <span>Công cụ hệ thống</span>
+          <a href="http://localhost:3000" target="_blank" rel="noopener noreferrer">Grafana</a>
+          <a href="http://localhost:8080" target="_blank" rel="noopener noreferrer">phpMyAdmin</a>
+          <a href="http://localhost:9090" target="_blank" rel="noopener noreferrer">Prometheus</a>
+        </nav>
+        <span>© 2026 Movie Ticket System</span>
+      </div>
+    </footer>
+
+    <script src="/app.js"></script>
+  </body>
+</html>

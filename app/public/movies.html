@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Phim đang chiếu | MovieTicket</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header>
+      <div class="navbar">
+        <a class="brand" href="/" aria-label="MovieTicket - Trang chủ">🎬 MovieTicket</a>
+        <nav class="nav-links">
+          <a href="/">Trang chủ</a>
+          <a href="/movies" aria-current="page">Phim</a>
+          <a href="/booking">Đặt vé</a>
+          <a href="/admin">Admin</a>
+          <a href="/login">Đăng nhập</a>
+          <a href="/register">Đăng ký</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container page-content">
+      <section class="section">
+        <div class="page-heading">
+          <div>
+            <p class="eyebrow">MOVIETICKET / PHIM</p>
+            <h1>Phim đang chiếu</h1>
+          </div>
+          <a href="/booking" class="btn">Đặt vé</a>
+        </div>
+        <div id="movie-list" class="movies"></div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="footer-content">
+        <a class="home-link" href="/">MovieTicket · Trang chủ</a>
+        <nav class="system-links" aria-label="Công cụ hệ thống">
+          <span>Công cụ hệ thống</span>
+          <a href="http://localhost:3000" target="_blank" rel="noopener noreferrer">Grafana</a>
+          <a href="http://localhost:8080" target="_blank" rel="noopener noreferrer">phpMyAdmin</a>
+          <a href="http://localhost:9090" target="_blank" rel="noopener noreferrer">Prometheus</a>
+        </nav>
+        <span>© 2026 Movie Ticket System</span>
+      </div>
+    </footer>
+
+    <script src="/app.js"></script>
+  </body>
+</html>
