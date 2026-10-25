@@ -52,6 +52,29 @@ async function loadMovies() {
   }
 }
 
+async function loadHomeFeatured() {
+  const featuredList = document.getElementById('home-featured-list');
+  if (!featuredList) return;
+
+  try {
+    const response = await fetch('/api/movies');
+    if (!response.ok) throw new Error('Không thể tải danh sách phim.');
+    const movies = await response.json();
+
+    featuredList.innerHTML = movies.slice(0, 4).map(movie => `
+      <a class="home-featured-card" href="/booking?movieId=${movie.id}">
+        <div class="home-featured-poster">
+          <img src="${movie.poster_url}" alt="Poster phim ${movie.title}" loading="lazy" onerror="this.hidden = true" />
+        </div>
+        <strong>${movie.title}</strong>
+        <span>${movie.genre} · ${movie.duration}</span>
+      </a>
+    `).join('');
+  } catch (error) {
+    featuredList.textContent = error.message;
+  }
+}
+
 async function loadShowtimes() {
   const response = await fetch('/api/showtimes');
   showtimes = await response.json();
@@ -193,3 +216,4 @@ initializeBooking();
 }
 
 if (movieList) loadMovies();
+loadHomeFeatured();
