@@ -118,8 +118,8 @@ function setSessionCookie(res, user) {
 function connectDatabase() {
   const db = mysql.createConnection({
     host: process.env.DB_HOST || 'mysql',
-    user: process.env.DB_USER || 'root',
-    password: process.env.DB_PASS || 'rootpassword',
+    user: process.env.DB_USER || 'movie_app',
+    password: process.env.DB_PASS || 'MovieApp_Local_Demo_Only_ChangeMe_2026!',
     database: process.env.DB_NAME || 'movie_db',
     charset: 'UTF8MB4_UNICODE_CI'
   });
@@ -133,68 +133,13 @@ function connectDatabase() {
 
     console.log('Đã kết nối thành công tới MySQL Database!');
     app.locals.db = db;
-    initDatabase(db);
+    seedInitialMovies(db);
     refreshDatabaseMetrics(db);
     setInterval(() => refreshDatabaseMetrics(db), 30000).unref();
   });
 }
 
-function initDatabase(db) {
-  const queries = [
-    `CREATE TABLE IF NOT EXISTS users (
-      id INT AUTO_INCREMENT PRIMARY KEY,
-      name VARCHAR(100) NOT NULL,
-      email VARCHAR(100) UNIQUE NOT NULL,
-      password_hash VARCHAR(255) NOT NULL,
-      role ENUM('user','admin') DEFAULT 'user',
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    )`,
-    `CREATE TABLE IF NOT EXISTS movies (
-      id INT AUTO_INCREMENT PRIMARY KEY,
-      title VARCHAR(200) NOT NULL,
-      genre VARCHAR(100) NOT NULL,
-      duration VARCHAR(50) NOT NULL,
-      rating DECIMAL(3,1) DEFAULT 0,
-      poster_url VARCHAR(255) DEFAULT '',
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    )`,
-    `CREATE TABLE IF NOT EXISTS showtimes (
-      id INT AUTO_INCREMENT PRIMARY KEY,
-      movie_id INT NOT NULL,
-      cinema_name VARCHAR(200) NOT NULL,
-      start_time VARCHAR(50) NOT NULL,
-      price DECIMAL(10,2) DEFAULT 0,
-      FOREIGN KEY (movie_id) REFERENCES movies(id)
-    )`,
-    `CREATE TABLE IF NOT EXISTS seats (
-      id INT AUTO_INCREMENT PRIMARY KEY,
-      showtime_id INT NOT NULL,
-      seat_code VARCHAR(10) NOT NULL,
-      status ENUM('available','booked') DEFAULT 'available',
-      FOREIGN KEY (showtime_id) REFERENCES showtimes(id)
-    )`,
-    `CREATE TABLE IF NOT EXISTS bookings (
-      id INT AUTO_INCREMENT PRIMARY KEY,
-      movie_id INT NOT NULL,
-      customer_name VARCHAR(100) NOT NULL,
-      cinema_name VARCHAR(200) NOT NULL,
-      show_time VARCHAR(50) NOT NULL,
-      seats INT NOT NULL,
-      total_price DECIMAL(10,2) DEFAULT 0,
-      status ENUM('pending','confirmed','cancelled') DEFAULT 'confirmed',
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY (movie_id) REFERENCES movies(id)
-    )`
-  ];
-
-  queries.forEach((sql) => {
-    db.query(sql, (err) => {
-      if (err) {
-        console.error('Lỗi tạo bảng:', err);
-      }
-    });
-  });
-
+function seedInitialMovies(db) {
   db.query('SELECT COUNT(*) AS total FROM movies', (err, results) => {
     if (!err && Number(results[0].total) === 0) {
       const seedMovies = [

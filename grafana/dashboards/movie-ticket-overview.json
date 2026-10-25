@@ -95,6 +95,26 @@
       "targets": [{ "expr": "{container_name=\"/movie_webapp\"}", "refId": "A" }],
       "title": "Nhật ký ứng dụng",
       "type": "logs"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "color": { "mode": "palette-classic" }, "unit": "cores" }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 23 },
+      "id": 10,
+      "options": { "legend": { "displayMode": "list", "placement": "bottom" }, "tooltip": { "mode": "multi" } },
+      "targets": [{ "expr": "docker_container_cpu_usage_cores", "legendFormat": "{{container_name}}", "refId": "A" }],
+      "title": "CPU theo container",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "color": { "mode": "palette-classic" }, "unit": "bytes" }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 23 },
+      "id": 11,
+      "options": { "legend": { "displayMode": "list", "placement": "bottom" }, "tooltip": { "mode": "multi" } },
+      "targets": [{ "expr": "docker_container_memory_usage_bytes", "legendFormat": "{{container_name}}", "refId": "A" }],
+      "title": "Bộ nhớ theo container",
+      "type": "timeseries"
     }
   ],
   "refresh": "15s",
@@ -106,5 +126,5 @@
   "timezone": "browser",
   "title": "Movie Ticket System - Tổng quan",
   "uid": "movie-ticket-overview",
-  "version": 1
+  "version": 5
 }

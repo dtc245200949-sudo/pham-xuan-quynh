@@ -3,45 +3,72 @@ services:
     image: mysql:8.0
     container_name: movie_mysql
     environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-MovieRoot_Local_Demo_Only_ChangeMe_2026!}
       MYSQL_DATABASE: movie_db
-    ports:
-      - "3306:3306"
     volumes:
       - ./app/init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-prootpassword"]
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -p\"$$MYSQL_ROOT_PASSWORD\""]
       interval: 10s
       timeout: 5s
       retries: 10
       start_period: 20s
     networks:
-      - app-net
+      - db-net
+
+  db-user-init:
+    image: mysql:8.0
+    container_name: movie_db_user_init
+    entrypoint: ["/bin/sh", "-ec"]
+    command:
+      - >-
+        mysql --protocol=TCP -h mysql -uroot -p"$$MYSQL_ROOT_PASSWORD" -e
+        "CREATE USER IF NOT EXISTS '$$MYSQL_APP_USER'@'%' IDENTIFIED BY '$$MYSQL_APP_PASSWORD';
+        ALTER USER '$$MYSQL_APP_USER'@'%' IDENTIFIED BY '$$MYSQL_APP_PASSWORD';
+        GRANT SELECT, INSERT, UPDATE, DELETE ON movie_db.* TO '$$MYSQL_APP_USER'@'%';
+        CREATE USER IF NOT EXISTS '$$MYSQL_MONITOR_USER'@'%' IDENTIFIED BY '$$MYSQL_MONITOR_PASSWORD';
+        ALTER USER '$$MYSQL_MONITOR_USER'@'%' IDENTIFIED BY '$$MYSQL_MONITOR_PASSWORD';
+        GRANT PROCESS, REPLICATION CLIENT, SELECT ON *.* TO '$$MYSQL_MONITOR_USER'@'%';"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-MovieRoot_Local_Demo_Only_ChangeMe_2026!}
+      MYSQL_APP_USER: ${MYSQL_APP_USER:-movie_app}
+      MYSQL_APP_PASSWORD: ${MYSQL_APP_PASSWORD:-MovieApp_Local_Demo_Only_ChangeMe_2026!}
+      MYSQL_MONITOR_USER: ${MYSQL_MONITOR_USER:-movie_monitor}
+      MYSQL_MONITOR_PASSWORD: ${MYSQL_MONITOR_PASSWORD:-MovieMonitor_Local_Demo_Only_ChangeMe_2026!}
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - db-net
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     container_name: movie_phpmyadmin
     environment:
       PMA_HOST: mysql
-      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-MovieRoot_Local_Demo_Only_ChangeMe_2026!}
     ports:
       - "8080:80"
     networks:
       - app-net
+      - db-net
 
   webapp:
     build: ./app
     container_name: movie_webapp
     environment:
       DB_HOST: mysql
-      DB_USER: root
-      DB_PASS: rootpassword
+      DB_USER: ${MYSQL_APP_USER:-movie_app}
+      DB_PASS: ${MYSQL_APP_PASSWORD:-MovieApp_Local_Demo_Only_ChangeMe_2026!}
       DB_NAME: movie_db
     depends_on:
       mysql:
         condition: service_healthy
+      db-user-init:
+        condition: service_completed_successfully
     networks:
       - app-net
+      - db-net
 
   nginx:
     build: ./nginx
@@ -67,20 +94,64 @@ services:
       - prometheus_data:/prometheus
     networks:
       - app-net
+      - metrics-net
 
   mysqld-exporter:
     image: prom/mysqld-exporter:v0.16.0
     container_name: movie_mysqld_exporter
     command:
       - --mysqld.address=mysql:3306
-      - --mysqld.username=movie_monitor
+      - --mysqld.username=${MYSQL_MONITOR_USER:-movie_monitor}
     environment:
-      MYSQLD_EXPORTER_PASSWORD: monitorpassword
+      MYSQLD_EXPORTER_PASSWORD: ${MYSQL_MONITOR_PASSWORD:-MovieMonitor_Local_Demo_Only_ChangeMe_2026!}
     depends_on:
       mysql:
         condition: service_healthy
     networks:
       - app-net
+      - db-net
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.49.1
+    container_name: movie_cadvisor
+    privileged: true
+    command:
+      - --docker_only=true
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /sys:/sys:ro
+      - /var/lib/docker:/var/lib/docker:ro
+      - /dev/disk:/dev/disk:ro
+    networks:
+      - app-net
+
+  docker-socket-proxy:
+    image: tecnativa/docker-socket-proxy:latest
+    container_name: movie_docker_socket_proxy
+    environment:
+      CONTAINERS: "1"
+      INFO: "1"
+      PING: "1"
+      VERSION: "1"
+      POST: "0"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - metrics-net
+
+  docker-metrics-exporter:
+    image: node:18-alpine
+    container_name: movie_docker_metrics_exporter
+    working_dir: /app
+    command: ["node", "docker-container-exporter.js"]
+    volumes:
+      - ./metrics/docker-container-exporter.js:/app/docker-container-exporter.js:ro
+    depends_on:
+      - docker-socket-proxy
+    networks:
+      - metrics-net
 
   loki:
     image: grafana/loki:latest
@@ -111,7 +182,7 @@ services:
       - "3000:3000"
     environment:
       GF_SECURITY_ADMIN_USER: admin
-      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-MovieTicket@2026}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-MovieGrafana_Local_Demo_Only_ChangeMe_2026!}
     volumes:
       - grafana_data:/var/lib/grafana
       - ./grafana/provisioning:/etc/grafana/provisioning:ro
@@ -129,3 +200,9 @@ volumes:
 networks:
   app-net:
     driver: bridge
+  db-net:
+    driver: bridge
+    internal: true
+  metrics-net:
+    driver: bridge
+    internal: true

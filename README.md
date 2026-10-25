@@ -22,6 +22,8 @@ Hệ thống đặt vé xem phim / sự kiện, xây dựng trên stack Node.js 
 ## Hướng dẫn chạy
 1. Khởi động hệ thống:
    ```bash
+   cp .env.example .env
+   # Change all demo passwords in .env before exposing services outside localhost.
    docker compose up -d --build
    ```
 2. Truy cập ứng dụng:
@@ -36,11 +38,13 @@ Hệ thống đặt vé xem phim / sự kiện, xây dựng trên stack Node.js 
    - http://localhost:8280/admin
 
 ## Tài khoản demo và dữ liệu giám sát
-- Grafana: `admin` / `MovieTicket@2026` (đổi bằng biến môi trường `GRAFANA_ADMIN_PASSWORD`)
-- phpMyAdmin: chọn máy chủ `mysql`, đăng nhập `root` / `rootpassword`, cơ sở dữ liệu `movie_db`
+- Grafana: `admin` / giá trị `GRAFANA_ADMIN_PASSWORD` trong `.env`
+- phpMyAdmin: chọn máy chủ `mysql`, đăng nhập `root` / giá trị `MYSQL_ROOT_PASSWORD` trong `.env`, cơ sở dữ liệu `movie_db`
+- Web app kết nối bằng user `MYSQL_APP_USER`, chỉ có quyền đọc/ghi dữ liệu trong `movie_db`; không dùng `root`.
 - Cơ sở dữ liệu mẫu có phim, suất chiếu, người dùng và lượt đặt vé; dữ liệu giữ trong MySQL container.
-- Prometheus thu thập metrics của app tại `/metrics` và MySQL thông qua `mysqld-exporter`.
-- Dashboard Grafana hiển thị trạng thái dịch vụ, lưu lượng, độ trễ, số phim/suất chiếu/lượt đặt vé/người dùng và log ứng dụng.
+- Prometheus thu thập metrics của app tại `/metrics`, MySQL qua `mysqld-exporter`, và CPU/RAM từng container qua Docker API exporter; cAdvisor bổ sung metrics cgroup trên Linux.
+- Dashboard Grafana hiển thị trạng thái dịch vụ, lưu lượng, độ trễ, số phim/suất chiếu/lượt đặt vé/người dùng, CPU/RAM từng container và log ứng dụng.
+- Các truy vấn LogQL mẫu được ghi tại [docs/LOGQL.md](docs/LOGQL.md).
 - Lịch sử metrics và dữ liệu Grafana được lưu bằng Docker volumes; log Loki được thu thập khi dịch vụ hoạt động.
 
 ## Chức năng chính
@@ -54,8 +58,10 @@ Hệ thống đặt vé xem phim / sự kiện, xây dựng trên stack Node.js 
 ## Hardening đã áp dụng
 - Nginx security headers
 - User non-root trong app container
-- Docker network isolation
-- Chỉ expose các port cần thiết
+- Tách mạng database nội bộ khỏi mạng reverse proxy/monitoring; MySQL không publish cổng host
+- User ứng dụng chỉ có quyền SELECT/INSERT/UPDATE/DELETE trên `movie_db`
+- Đặt mật khẩu qua `.env`, không commit `.env`
+- Chỉ expose các port cần thiết cho demo
 - MySQL health check
 
 ## Tài liệu báo cáo

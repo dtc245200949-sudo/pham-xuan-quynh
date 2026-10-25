@@ -63,6 +63,5 @@ VALUES
   (3, 'Galaxy', '21:00', 110000),
   (4, 'CGV Mipec Long Biên', '20:30', 160000)
 ON DUPLICATE KEY UPDATE cinema_name = VALUES(cinema_name);
+-- Service accounts are provisioned by the Compose db-user-init service.
 
-CREATE USER IF NOT EXISTS 'movie_monitor'@'%' IDENTIFIED BY 'monitorpassword';
-GRANT PROCESS, REPLICATION CLIENT, SELECT ON *.* TO 'movie_monitor'@'%';
