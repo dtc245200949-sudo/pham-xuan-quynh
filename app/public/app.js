@@ -6,9 +6,12 @@ const form = document.getElementById('booking-form');
 const resultBox = document.getElementById('booking-result');
 const seatGrid = document.getElementById('seat-grid');
 const userStatus = document.getElementById('user-status');
+const bookingPoster = document.getElementById('booking-poster');
+const bookingMovieMeta = document.getElementById('booking-movie-meta');
 let selectedSeats = [];
 let currentShowtimeId = 1;
 let showtimes = [];
+let movies = [];
 
 async function fetchMe() {
   if (!userStatus) return;
@@ -29,7 +32,7 @@ async function fetchMe() {
 
 async function loadMovies() {
   const response = await fetch('/api/movies');
-  const movies = await response.json();
+  movies = await response.json();
 
   if (movieList) movieList.innerHTML = movies.map(movie => `
     <article class="movie-card">
@@ -49,7 +52,18 @@ async function loadMovies() {
     if (requestedMovieId && movies.some(movie => String(movie.id) === requestedMovieId)) {
       movieSelect.value = requestedMovieId;
     }
+    updateBookingPoster();
   }
+}
+
+function updateBookingPoster() {
+  if (!bookingPoster || !movieSelect) return;
+  const movie = movies.find(item => Number(item.id) === Number(movieSelect.value));
+  if (!movie) return;
+
+  bookingPoster.src = movie.poster_url;
+  bookingPoster.alt = `Poster phim ${movie.title}`;
+  bookingMovieMeta.textContent = `${movie.genre} · ${movie.duration} · IMDb ${movie.rating}`;
 }
 
 async function loadHomeFeatured() {
@@ -141,7 +155,10 @@ async function renderSeatGrid() {
 }
 
 if (form) {
-movieSelect.addEventListener('change', updateShowtimeOptions);
+movieSelect.addEventListener('change', () => {
+  updateBookingPoster();
+  updateShowtimeOptions();
+});
 
 cinemaSelect.addEventListener('change', updateShowtimeOptions);
 
