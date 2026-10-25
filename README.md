@@ -26,7 +26,13 @@ Hệ thống đặt vé xem phim / sự kiện, xây dựng trên stack Node.js 
    # Change all demo passwords in .env before exposing services outside localhost.
    docker compose up -d --build
    ```
-2. Truy cập ứng dụng:
+2. Build và đẩy ba image tùy chỉnh lên Docker Hub:
+   ```bash
+   docker login
+   docker compose build webapp nginx docker-metrics-exporter
+   docker compose push webapp nginx docker-metrics-exporter
+   ```
+3. Truy cập ứng dụng:
    - http://localhost:8280
    - http://localhost:8280/movies (Phim đang chiếu)
    - http://localhost:8280/booking (Đặt vé)
@@ -34,7 +40,7 @@ Hệ thống đặt vé xem phim / sự kiện, xây dựng trên stack Node.js 
    - http://localhost:3000 (Grafana)
    - http://localhost:9090 (Prometheus)
    - Dashboard Grafana: http://localhost:3000/d/movie-ticket-overview/movie-ticket-system-tong-quan
-3. Admin page:
+4. Admin page:
    - http://localhost:8280/admin
 
 ## Tài khoản demo và dữ liệu giám sát

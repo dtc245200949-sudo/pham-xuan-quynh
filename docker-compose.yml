@@ -55,6 +55,7 @@ services:
 
   webapp:
     build: ./app
+    image: ${DOCKERHUB_USERNAME:-phamquynh2006}/movie-ticket-app:latest
     container_name: movie_webapp
     environment:
       DB_HOST: mysql
@@ -72,6 +73,7 @@ services:
 
   nginx:
     build: ./nginx
+    image: ${DOCKERHUB_USERNAME:-phamquynh2006}/movie-ticket-nginx:latest
     container_name: movie_nginx
     ports:
       - "8280:80"
@@ -142,12 +144,9 @@ services:
       - metrics-net
 
   docker-metrics-exporter:
-    image: node:18-alpine
+    build: ./metrics
+    image: ${DOCKERHUB_USERNAME:-phamquynh2006}/movie-ticket-metrics-exporter:latest
     container_name: movie_docker_metrics_exporter
-    working_dir: /app
-    command: ["node", "docker-container-exporter.js"]
-    volumes:
-      - ./metrics/docker-container-exporter.js:/app/docker-container-exporter.js:ro
     depends_on:
       - docker-socket-proxy
     networks:
