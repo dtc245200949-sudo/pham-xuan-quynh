@@ -146,7 +146,11 @@ function seedInitialMovies(db) {
         ['Dune: Hành Tinh Cát - Phần Hai', 'Hành động phiêu lưu', '2h 46m', 8.8, 'https://image.tmdb.org/t/p/w500/1pdfLvkbY9ohJlCjQH2CZjjYVvJ.jpg'],
         ['Batman: Vạch Trần Sự Thật', 'Hành động giật gân', '2h 56m', 8.6, 'https://image.tmdb.org/t/p/w500/b0PlSFdDwbyK0cf5RxwDpaOJQvQ.jpg'],
         ['Những Mảnh Ghép Cảm Xúc 2', 'Hoạt hình', '1h 36m', 8.0, 'https://image.tmdb.org/t/p/w500/vpnVM9B6NMmQpWeZvzLvDESb2QY.jpg'],
-        ['Oppenheimer: Cha Đẻ Bom Nguyên Tử', 'Tiểu sử, chiến tranh', '3h 0m', 8.6, 'https://image.tmdb.org/t/p/w500/ptpr0kGAckfQkJeJIt8st5dglvd.jpg']
+        ['Oppenheimer: Cha Đẻ Bom Nguyên Tử', 'Tiểu sử, chiến tranh', '3h 0m', 8.6, 'https://image.tmdb.org/t/p/w500/ptpr0kGAckfQkJeJIt8st5dglvd.jpg'],
+        ['Người Nhện: Du Hành Vũ Trụ Nhện', 'Hoạt hình, hành động', '2h 20m', 8.6, 'https://image.tmdb.org/t/p/w500/8Vt6mWEReuy4Of61Lnj5Xj704m8.jpg'],
+        ['Hố Đen Tử Thần', 'Khoa học viễn tưởng', '2h 49m', 8.7, 'https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg'],
+        ['Avatar: Dòng Chảy Của Nước', 'Khoa học viễn tưởng', '3h 12m', 7.5, 'https://image.tmdb.org/t/p/w500/t6HIqrRAclMCA60NsSmeqe9RmNV.jpg'],
+        ['Barbie: Thế Giới Rực Rỡ', 'Hài, giả tưởng', '1h 54m', 6.8, 'https://image.tmdb.org/t/p/w500/iuFNMS8U5cb6xfzi51Dbkovj7vM.jpg']
       ];
 
       seedMovies.forEach((movie) => {
@@ -166,7 +170,12 @@ function seedInitialMovies(db) {
          (1, 'CGV Hoàng Văn Thụ', '18:00', 150000),
          (2, 'Lotte Cinema', '13:30', 135000),
          (3, 'Galaxy', '21:00', 110000),
-         (4, 'CGV Mipec Long Biên', '20:30', 160000)`,
+         (4, 'CGV Mipec Long Biên', '20:30', 160000),
+         (5, 'CGV Landmark 81', '16:00', 145000),
+         (5, 'Lotte Gò Vấp', '20:15', 160000),
+         (6, 'Galaxy Nguyễn Du', '18:30', 140000),
+         (7, 'CGV Vincom', '14:00', 130000),
+         (8, 'Lotte Cộng Hòa', '19:00', 120000)`,
         (insertErr) => {
           if (insertErr) console.error('Lỗi seed suất chiếu:', insertErr);
         }
