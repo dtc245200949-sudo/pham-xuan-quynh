@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       message.textContent = `✅ ${data.message}. Đang chuyển về trang chủ...`;
-      setTimeout(() => window.location.href = '/', 800);
+      setTimeout(() => window.location.href = '/home', 800);
     });
   }
 
@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       message.textContent = `✅ ${data.message}. Đang chuyển về trang chủ...`;
-      setTimeout(() => window.location.href = '/', 800);
+      setTimeout(() => window.location.href = '/home', 800);
     });
   }
 });
