@@ -5,16 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Đăng nhập</title>
     <link rel="stylesheet" href="/styles.css" />
-    <style>
-      .auth-box {
-        max-width: 480px;
-        margin: 64px auto;
-        background: #111827;
-        padding: 24px;
-        border-radius: 16px;
-        border: 1px solid #334155;
-      }
-    </style>
   </head>
   <body>
     <header>
@@ -27,8 +17,16 @@
       </div>
     </header>
 
-    <main class="container">
-      <div class="auth-box">
+    <main class="auth-layout">
+      <section class="auth-image">
+        <img src="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&amp;fit=crop&amp;w=1800&amp;q=85" alt="Không gian rạp chiếu phim" />
+        <div class="auth-image-copy">
+          <p class="eyebrow">MOVIETICKET / RẠP PHIM CỦA BẠN</p>
+          <h1>Đêm nay xem phim gì?</h1>
+          <p>Chọn bộ phim yêu thích và giữ chỗ ngồi thật nhanh.</p>
+        </div>
+      </section>
+      <section class="auth-box">
         <h2>Đăng nhập</h2>
         <form id="login-form">
           <label>Email
@@ -40,7 +38,7 @@
           <button type="submit" style="margin-top: 16px;">Đăng nhập</button>
         </form>
         <p id="login-message"></p>
-      </div>
+      </section>
     </main>
 
     <script src="/login.js"></script>
